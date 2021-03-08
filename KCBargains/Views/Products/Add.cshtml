@@ -1,0 +1,234 @@
+﻿@model AddProductViewModel;
+    
+<div class="container w-75 p-3">
+    <section class="page-section " id="services" >
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Add Product</h2>
+            <h3 class="section-subheading text-muted">Please enter the product/item information below.</h3>
+        </div>
+
+        <form enctype="multipart/form-data" aps-controller="Products" asp-action="Add" method="post">
+
+            @*-------Product Information----------*@
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Name"></label>
+                    <input class="form-control" asp-for="Name" type="text" placeholder="Enter product name" />
+                    <span asp-validation-for="Name"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label asp-for="Description"></label>
+                    <input class="form-control" asp-for="Description" type="text" placeholder="Enter product description" />
+                    <span asp-validation-for="Description"></span>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Quantity">Quantity</label>
+                    <input class="form-control" asp-for="Quantity" type="text" placeholder="Enter weight or quantity" />
+                    <span asp-validation-for="Quantity"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label asp-for="Cost">Price</label>
+                    <input class="form-control" asp-for="Cost" type="text" placeholder="Enter price/cost" />
+                    <span asp-validation-for="Cost"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="CategoryId">Category Type</label>
+                    <select class="form-control" asp-for="CategoryId" asp-items="Model.Categories">
+                        <option value="">Pick a Category</option>
+                    </select>
+                    <span asp-validation-for="CategoryId"></span>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label asp-for="ProductPicture" class="control-label"></label>
+                    <div class="custom-file">
+                        <input class="custom-file-input" id="customFile" asp-for="ProductPicture">
+                        <label class="custom-file-label" for="customFile">Choose file</label>
+                    </div>
+                    <span asp-validation-for="ProductPicture" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="container" style="margin-bottom:10px; margin-top:10px">
+                <div class="text-center">
+                    <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#retailer">Add Product</a>
+                </div>
+            </div>
+
+
+            @*-------Retailer Information----------*@
+
+            <section class="page-section" style="padding-top:50px" id="retailer">
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase">Add Retailer</h2>
+                    <h3 class="section-subheading text-muted" style="margin-bottom:50px">Please enter retailer/store information below.</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Retailer.Name">Retailer</label>
+                        <input class="form-control" asp-for="Retailer.Name" type="text" placeholder="Enter retailer name" />
+                        <span asp-validation-for="Retailer.Name"></span>
+                    </div>
+                    <div class="form-group col-md-6" id="locationField">
+                        <label>Retailer Address</label>
+                        <input class="form-control" id="autocomplete" placeholder="Enter street address. We will autofill the rest." type="text" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Retailer.Street"></label>
+                        <input class="form-control" id="street_number" asp-for="Retailer.Street" type="text" disabled="true" />
+                        <span asp-validation-for="Retailer.Street"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Retailer.City"></label>
+                        <input class="form-control" id="locality" asp-for="Retailer.City" type="text" disabled="true" />
+                        <span asp-validation-for="Retailer.City"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="Retailer.State"></label>
+                        <input class="form-control" id="administrative_area_level_1" asp-for="Retailer.State" type="text" disabled="true" />
+                        <span asp-validation-for="Retailer.State"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Retailer.Zipcode"></label>
+                        <input class="form-control" id="postal_code" asp-for="Retailer.Zipcode" type="text" disabled="true" />
+                        <span asp-validation-for="Retailer.Zipcode"></span>
+                    </div>
+                </div>
+
+                <input type="hidden" id="latitude" asp-for="Retailer.Latitude">
+                <input type="hidden" id="longitude" asp-for="Retailer.Longitude">
+
+                <div class="container">
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary btn-xl text-uppercase" value="Add Retailer" />
+                    </div>
+                </div>
+            </section>
+
+        </form>
+    </section>
+    </div>
+ 
+
+
+    @section scripts{
+        <script type="text/javascript">
+            // Add the following code if you want the name of the file appear on select
+            $(".custom-file-input").on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+        </script>
+    }
+
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqXHMNoJJwES8K9SkbOgKejtmsH52QlYo&callback=initAutocomplete&libraries=places&v=weekly"
+            defer></script>
+    <script>
+        let placeSearch;
+        let autocomplete;
+        const componentForm = {
+            street_number: "short_name",
+            route: "long_name",
+            locality: "long_name",
+            administrative_area_level_1: "short_name",
+            postal_code: "short_name",
+        };
+        function initAutocomplete() {
+            // Create the autocomplete object, restricting the search predictions to
+            // geographical location types.
+            autocomplete = new google.maps.places.Autocomplete(
+                document.getElementById("autocomplete"),
+                { types: ["geocode"] }
+            );
+            // Avoid paying for data that you don't need by restricting the set of
+            // place fields that are returned to just the address components.
+            autocomplete.setFields(["address_component"]);
+            // When the user selects an address from the drop-down, populate the
+            // address fields in the form.
+            autocomplete.addListener("place_changed", fillInAddress);
+        }
+        function fillInAddress() {
+            // Get the place details from the autocomplete object.
+            const place = autocomplete.getPlace();
+            initMap();
+            for (const component in componentForm) {
+                if (component != "route") { // street_number and route fields are combined into one field, street. So they don't need to be cleared out
+                    document.getElementById(component).value = ""; //clear out the input fields
+                    document.getElementById(component).disabled = false; //street field is editable after autofill
+                }
+            }
+            // Get each component of the address from the place details,
+            // and then fill-in the corresponding field on the form.
+            for (const component of place.address_components) {
+                const addressType = component.types[0];
+                if (componentForm[addressType]) {
+                    let val = component[componentForm[addressType]];
+                    if (addressType == "street_number") {
+                        document.getElementById("street_number").value = val;
+                    }
+                    else if (addressType == "route") {
+                        document.getElementById("street_number").value += " " + val;
+                    }
+                    else {
+                        document.getElementById(addressType).value = val;
+                    }
+                }
+            }
+        }
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 8,
+                center: { lat: -34.397, lng: 150.644 },
+            });
+            const geocoder = new google.maps.Geocoder();
+            geocodeAddress(geocoder, map);
+        }
+        function geocodeAddress(geocoder, resultsMap) {
+            const address = document.getElementById("autocomplete").value;
+            geocoder.geocode({ address: address }, (results, status) => {
+                if (status === "OK") {
+                    resultsMap.setCenter(results[0].geometry.location);
+                    new google.maps.Marker({
+                        map: resultsMap,
+                        position: results[0].geometry.location,
+                    });
+                    var lng = results[0].geometry.location.lng();
+                    var lat = results[0].geometry.location.lat();
+                    console.log(lng);
+                    console.log(lat);
+                    //Reset Latitude and Longitude information in the form to ensure data integrity
+                    document.getElementById("latitude").value = "";
+                    document.getElementById("longitude").value = "";
+                    //Save Latitude and Longitude information to the form input element to be saved in the database
+                    document.getElementById("latitude").value = lat;
+                    document.getElementById("longitude").value = lng;
+                } else {
+                    alert(
+                        "Geocode was not successful for the following reason: " + status
+                    );
+                }
+            });
+        }
+    </script>
+
+    <div id="map">
+    </div>

@@ -1,0 +1,114 @@
+﻿@model List<Product>
+
+
+<div class="container w-75 p-3">
+    <section class="page-section" id="portfolio">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-heading text-uppercase">Product List</h2>
+                <h3 class="section-subheading text-muted mb-3">Check out the latest deals below.</h3>
+            </div>
+
+            @if (Model.Count == 0)
+            {
+                <h2 style="color:red">No events yet!</h2>
+
+                <a class="btn btn-primary mb-2" asp-controller="Products" asp-action="Add">Add Product</a>
+
+            }
+            else
+            {
+                <table class="table table-hover bg-light text-center mb-5">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Retailer</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Picture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <th scope="row" class="align-middle">@product.Id</th>
+                                <td class="align-middle"><a asp-controller="Products" asp-action="Detail" asp-route-id="@product.Id">@product.Name</a></td>
+                                <td class="align-middle">@product.Quantity</td>
+                                <td class="align-middle">$@product.Cost</td>
+                                <td class="align-middle">@product.ProductRetailer.Name</td>
+                                <td class="align-middle">@product.Category.Name</td>
+                                <td class="align-middle">
+                                    <!-- Product Picture -->
+                                    <div class="portfolio-item">
+                                        <a class="portfolio-link" data-toggle="modal" href="#exampleModalCenter">
+                                            <div class="portfolio-hover rounded-pill">
+                                                <div class="portfolio-hover-content"><i class="fas fa-plus"></i></div>
+                                            </div>
+                                            <img src="~/images/@product.Picture" class="rounded-circle" height="40" width="40" asp-append-version="true" />
+                                        </a>
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img class="d-block mx-auto" style="max-height:50%; max-width:50%" src="~/images/@product.Picture" alt="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+                <div class="container pt-xl-5">
+                    <div class="text-center">
+                        <h2 class="section-heading text-uppercase">Product Map</h2>
+                        <h3 class="section-subheading text-muted mb-3">Find the locations of all deals below.</h3>
+                    </div>
+                    <div id="GoogleMaps" style="width:100%;height:400px;"></div>
+                </div>
+
+                    <script>
+    function initMap() {
+        var bounds = new google.maps.LatLngBounds();
+        const map = new google.maps.Map(document.getElementById("GoogleMaps"), {
+            zoom: 8,
+            center: { lat: @Model[0].ProductRetailer.HomeLatitude, lng: @Model[0].ProductRetailer.HomeLongitude },
+        });
+        bounds.extend({ lat:  @Model[0].ProductRetailer.HomeLatitude, lng: @Model[0].ProductRetailer.HomeLongitude});
+    @foreach (var item in Model)
+        {
+            <text>
+        var marker = new google.maps.Marker({
+            position: { lat: @item.ProductRetailer.Latitude, lng: @item.ProductRetailer.Longitude },
+            map: map,
+            label:"@item.Name",
+        });
+        bounds.extend({ lat: @item.ProductRetailer.Latitude, lng: @item.ProductRetailer.Longitude });
+            </text>
+        }
+        map.fitBounds(bounds);
+    }
+                    </script>
+
+                    <script defer
+                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqXHMNoJJwES8K9SkbOgKejtmsH52QlYo&callback=initMap&libraries=&v=weekly">
+                    </script>
+                    }
+
+                </div>
+</section>
+            </div>

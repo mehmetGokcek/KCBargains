@@ -1,0 +1,27 @@
+﻿@page
+@model RegisterConfirmationModel
+
+
+<div class="container w-50" style="padding-top:40px;">
+    <section class="page-section" id="about">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">SIGN UP CONFIRMATION</h2>
+                @{
+                    if (@Model.DisplayConfirmAccountLink)
+                    {
+                        <h4 id="external-login-title">
+                            This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
+                            Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
+                        </h4>
+                    }
+                    else
+                    {
+                        <h4 id="external-login-title">
+                            Please check your email to confirm your account.
+                        </h4>
+                    }
+                }
+                    
+        </diV>
+    </section>
+</div>
