@@ -203,3 +203,4 @@ C:\Users\aldi\source\repos\KCBargains\KCBargains\obj\Debug\netcoreapp3.1\KCBarga
 C:\Users\aldi\source\repos\KCBargains\KCBargains\obj\Debug\netcoreapp3.1\KCBargains.csproj.CopyComplete
 C:\Users\aldi\source\repos\KCBargains\KCBargains\obj\Debug\netcoreapp3.1\KCBargains.genruntimeconfig.cache
 C:\Users\aldi\source\repos\KCBargains\KCBargains\obj\Debug\netcoreapp3.1\KCBargains.csprojAssemblyReference.cache
+C:\Users\aldi\source\repos\KCBargains\KCBargains\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\Index.cshtml.g.cs
